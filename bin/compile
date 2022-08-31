@@ -9,6 +9,9 @@ if [ "$STACK" = "heroku-16" ]; then
   OS_VERSION_NAME="xenial"
 elif [ "$STACK" = "heroku-18" ]; then
   OS_VERSION_NAME="bionic"
+elif [ "$STACK" = "heroku-22" ]; then
+  WKHTMLTOX_VERSION=0.12.6.1-2
+  OS_VERSION_NAME="jammy"
 fi
 
 DOWNLOAD_URL="https://github.com/wkhtmltopdf/packaging/releases/download/$WKHTMLTOX_VERSION/wkhtmltox_$WKHTMLTOX_VERSION.${OS_VERSION_NAME}_amd64.deb"
