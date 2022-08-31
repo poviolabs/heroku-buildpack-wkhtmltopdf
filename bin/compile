@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+OS_VERSION_NAME="focal"
+WKHTMLTOX_VERSION=0.12.6-1
+
+if [ "$STACK" = "heroku-16" ]; then
+  OS_VERSION_NAME="xenial"
+elif [ "$STACK" = "heroku-18" ]; then
+  OS_VERSION_NAME="bionic"
+fi
+
+DOWNLOAD_URL="https://github.com/wkhtmltopdf/packaging/releases/download/$WKHTMLTOX_VERSION/wkhtmltox_$WKHTMLTOX_VERSION.${OS_VERSION_NAME}_amd64.deb"
+PACKAGE_FILENAME=${DOWNLOAD_URL##*/}
+PACKAGE_DIR="$CACHE_DIR/${PACKAGE_FILENAME%.*}"
+
+if [ ! -d "$PACKAGE_DIR" ]; then
+  if [ ! -f "$CACHE_DIR/$PACKAGE_FILENAME" ]; then
+    curl --location --output "$CACHE_DIR/$PACKAGE_FILENAME" $DOWNLOAD_URL
+  fi
+
+  dpkg --extract "$CACHE_DIR/$PACKAGE_FILENAME" "$PACKAGE_DIR"
+  rm "$CACHE_DIR/$PACKAGE_FILENAME"
+fi
+
+cp "$PACKAGE_DIR"/usr/local/bin/* "$BUILD_DIR"/bin/
